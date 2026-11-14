@@ -1,0 +1,92 @@
+{
+  "curves": [
+    {
+      "id": "c1",
+      "specimen": "s1",
+      "batch": "b1",
+      "treatment": "old",
+      "end_reason": "complete",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.5,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "c2",
+      "specimen": "s1",
+      "batch": "b1",
+      "treatment": "old",
+      "end_reason": "complete",
+      "points": [
+        [
+          0,
+          0.1
+        ],
+        [
+          0.4,
+          1.7
+        ],
+        [
+          1,
+          3.1
+        ]
+      ]
+    },
+    {
+      "id": "c3",
+      "specimen": "s2",
+      "batch": "b2",
+      "treatment": "new",
+      "end_reason": "early_stop",
+      "points": [
+        [
+          0.1,
+          0
+        ],
+        [
+          0.5,
+          2.1
+        ],
+        [
+          0.8,
+          2.9
+        ]
+      ]
+    },
+    {
+      "id": "c4",
+      "specimen": "s3",
+      "batch": "b3",
+      "treatment": "new",
+      "end_reason": "complete",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.3,
+          1.4
+        ],
+        [
+          0.7,
+          2.9
+        ],
+        [
+          1,
+          3.5
+        ]
+      ]
+    }
+  ]
+}
