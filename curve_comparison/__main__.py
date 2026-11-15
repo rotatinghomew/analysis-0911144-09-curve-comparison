@@ -39,7 +39,31 @@ def main():
                 client = Client(f'http://127.0.0.1:{server.server_port}')
                 data = json.loads(args.fixture.read_text())
                 receipt = client.import_data(data, 'demo')
-                print(json.dumps({'import': receipt, 'summary': client.summary(receipt['revision'])}, ensure_ascii=False, indent=2))
+                comparison = client.comparison(receipt['revision'])
+                print(json.dumps({
+                    'import': receipt,
+                    'summary': client.summary(receipt['revision']),
+                    'comparison_status': comparison['result']['status'],
+                    'primary_strategy': comparison['result']['primary_strategy'],
+                    'phase_amplitude_split': comparison['result']['phase_amplitude_split'],
+                    'strategies': [
+                        {
+                            'key': block['key'],
+                            'between_arm_lag': block['phase']['between_arm_lag'],
+                            'aligned_support': block['aligned_support'],
+                            'integrated': None if block['integrated'] is None else {
+                                'mean_gap': block['integrated']['mean_gap'],
+                                'ci95': [block['integrated']['ci95_lower'],
+                                         block['integrated']['ci95_upper']],
+                                'permutation_p': block['integrated']['permutation_p'],
+                            },
+                            'credible_regions': block['pointwise']['credible_regions'],
+                        }
+                        for block in comparison['result']['strategies']
+                    ],
+                    'tails': comparison['result']['tails'],
+                    'stop_reasons': comparison['result']['stop_reasons'],
+                }, ensure_ascii=False, indent=2))
             finally:
                 server.shutdown()
                 worker.join()

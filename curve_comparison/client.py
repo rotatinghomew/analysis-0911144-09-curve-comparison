@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
@@ -17,3 +18,17 @@ class Client:
 
     def summary(self, revision=None):
         return self.request('/summary' + ('' if revision is None else f'?revision={revision}'))
+
+    def records(self, revision=None):
+        return self.request('/records' + ('' if revision is None else f'?revision={revision}'))
+
+    def comparison(self, revision=None, strategy='cross_correlation', cap=0.10,
+                   grid_points=51, baseline=None, reference_shift=None):
+        query = {'strategy': strategy, 'cap': cap, 'grid_points': grid_points}
+        if revision is not None:
+            query['revision'] = revision
+        if baseline is not None:
+            query['baseline'] = baseline
+        if reference_shift is not None:
+            query['shift'] = [f'{label}:{value}' for label, value in reference_shift.items()]
+        return self.request('/comparison?' + urlencode(query, doseq=True))

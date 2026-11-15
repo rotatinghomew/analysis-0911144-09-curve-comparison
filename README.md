@@ -24,6 +24,10 @@ python -m curve_comparison serve --database /tmp/curve_comparison.sqlite3 --load
 
 ## 目录与现有能力
 
-`curve_comparison/domain.py` 负责资料规则和已有概览；`repository.py` 负责不可变资料版本与导入回执；`service.py` 是服务边界；`client.py` 是独立 HTTP 消费者。fixtures/demo.json 是便于逐项核对的小样本，fixtures/history.json 是同口径的本地合成历史资料。测试覆盖领域规则、版本稳定性及真实 HTTP 往返。
+`curve_comparison/domain.py` 负责资料规则和已有概览；`analysis.py` 负责面向工艺比较的曲线分析（相位/幅度分离、可信作用区间、对齐敏感性）；`repository.py` 负责不可变资料版本与导入回执；`service.py` 是服务边界；`client.py` 是独立 HTTP 消费者。fixtures/demo.json 是便于逐项核对的小样本，fixtures/history.json 是同口径的本地合成历史资料。测试覆盖领域规则、版本稳定性、真实 HTTP 往返与分析口径（含停止条件、上限截断、尾段处理）。
+
+## 工艺比较分析
+
+`GET /comparison`（客户端 `Client.comparison`）在指定 revision 上运行，把阶段错位与幅度差异分开：重复试件先在试件内平均、再按批次平均，批次是推断单位；对齐只允许整条工艺臂共用一个有上限的 x 平移，并固定同时给出无对齐与 cap=0.05/0.10/0.20 的敏感性结果；逐点 Welch 区间给出可信作用区间（声明未做多重性校正），整体差异用批次积分值的置换检验；严格共同支撑之外不置零、不外推，early_stop 尾段只登记；缺少共同阶段或分组条件冲突时显式停止。完整口径见 docs/analysis.md。
 
 现有概览的解释边界跟随输出的 meaning 或 visibility 字段。原始资料和描述性结果不自动构成推断、优化或对外承诺；调用者应保留版本号和摘要。
